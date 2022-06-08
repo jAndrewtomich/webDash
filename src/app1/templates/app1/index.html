@@ -1,0 +1,73 @@
+{% extends 'app1/base.html' %}
+
+<script>
+    {% block jquery %}
+        var endpoint = 'api/chart/data'
+        var defaultData = []
+        var labels = []
+
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                labels = data.labels
+                defaultData = data.coords
+
+                const ctx = document.getElementById('myChart')
+                console.log(defaultData)
+                console.log(labels)
+                const myChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Patching Cadence',
+                            data: defaultData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom'
+                            } 
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: 'rgba(255, 99, 132, 1)',
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            error: function(error_data) {
+                console.log(error_data)
+            }
+        })
+    {% endblock %}
+</script>
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-4 col-md-4 col-lg-4"></div>
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <canvas id="myChart" width="400" height="300"></canvas>
+        </div>
+        <div class="col-sm-4 col-md-4 col-lg-4"></div>
+    </div>
+
+{% endblock %}
