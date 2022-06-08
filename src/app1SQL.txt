@@ -1,0 +1,9 @@
+BEGIN;
+--
+-- Alter field csvFile on csvfile
+--
+CREATE TABLE "new__app1_csvfile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "csvFile" varchar(100) NOT NULL, "name" varchar(100) NOT NULL);
+INSERT INTO "new__app1_csvfile" ("id", "name", "csvFile") SELECT "id", "name", "csvFile" FROM "app1_csvfile";
+DROP TABLE "app1_csvfile";
+ALTER TABLE "new__app1_csvfile" RENAME TO "app1_csvfile";
+COMMIT;
