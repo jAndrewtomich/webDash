@@ -8,15 +8,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
-from app1.models import CSVFile
+from app1.models import CSVFile, Tag, Participant, Evidence
+from django.core.files import File
 
 import pandas as pd
 import re, random
 
 
-
 ###### READ IN CSVs ##############
-df = (tmp := pd.read_csv(CSVFile.objects.all()[0].csvFile.name,
+ogdf = (tmp := pd.read_csv(CSVFile.objects.get(name='new').csvFile.name,
                         usecols=['Text',
                                 'Tag',
                                 'Tag - Group',
@@ -31,18 +31,40 @@ df = (tmp := pd.read_csv(CSVFile.objects.all()[0].csvFile.name,
      'Note - Industry': 'Industry',
      'Note - Participant ID': 'Participant'}, axis=1).dropna()
 
-orgdf = (tmp := pd.read_csv(CSVFile.objects.all()[1].csvFile.name)).drop(tmp.loc[tmp['Participant ID'].str.contains('P4'), :].index)
+orgdf = (tmp := pd.read_csv(CSVFile.objects.get(name='orgdf').csvFile.name)).drop(tmp.loc[tmp['Participant ID'].str.contains('P4'), :].index)
 
-parDict = {int(x.split('P')[-1]): f"P{int(x.split('P')[-1])}" for x in df.Participant.unique()}
+parDict = {int(x.split('P')[-1]): f"P{int(x.split('P')[-1])}" for x in ogdf.Participant.unique()}
 
-df['Participant'] = df['Participant'].map(lambda x: {v: k for k, v in parDict.items()}[f"P{int(x.split('P')[-1])}"])
+ogdf['Participant'] = ogdf['Participant'].map(lambda x: {v: k for k, v in parDict.items()}[f"P{int(x.split('P')[-1])}"])
 orgdf['Participant ID'] = orgdf['Participant ID'].map(lambda x: {v: k for k, v in parDict.items()}[f"P{int(x.split('P')[-1])}"])
 
-df['orgSize'] = df['Participant'].map(lambda x: orgdf[orgdf['Participant ID'] == x]['Org Size'].item()
+ogdf['orgSize'] = ogdf['Participant'].map(lambda x: orgdf[orgdf['Participant ID'] == x]['Org Size'].item()
                                       .replace(' to ', '-').replace(' +', '-99,999').replace('1000-4999', '1,000-4,999'))
 
-orgDict = {int(re.split(r'\D', x.replace(',', ''))[0]): x for x in df.orgSize}
-del df, orgdf
+orgDict = {int(re.split(r'\D', x.replace(',', ''))[0]): x for x in ogdf.orgSize}
+
+ogdf.orgSize = ogdf.orgSize.map(lambda x: {v: k for k, v in orgDict.items()}[x])
+
+
+for tup in ogdf.loc[:, 'Tag':'Group'].drop_duplicates().sort_values('Tag', ascending=False).reset_index().drop('index', axis=1).itertuples():
+    if tup[1] not in [t.name for t in Tag.objects.all()]:
+        t = Tag.objects.create(name=tup[1], group=tup[2])
+        t.save()
+
+for tup in ogdf.loc[:, 'Role':'orgSize'].drop_duplicates().sort_values('Participant', ascending=False).reset_index().drop('index', axis=1).itertuples():
+    if f"RHI {str(tup[3])}" not in [p.name for p in Participant.objects.all()]:
+        p = Participant.objects.create(name=f"RHI {str(tup[3])}", role=tup[1], industry=tup[2], orgSize=tup[4])
+        p.save()
+
+        for e in ogdf.loc[ogdf.Participant == tup[3], 'Evidence'].unique():
+            tags_list = ogdf.sort_values('Group', ascending=False).loc[ogdf.Evidence == e, 'Tag'].to_list()
+            ev = Evidence.objects.create(text=f"{e[:197]}...", participant=Participant.objects.filter(name=f"RHI {str(tup[3])}")[0])
+            ev.save()
+            for t in tags_list:
+                ev.tags.add(Tag.objects.filter(name=t)[0])
+                ev.save()
+
+del ogdf, orgdf
 ####################################
 
 
@@ -63,7 +85,7 @@ class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
 
-        file_name = CSVFile.objects.all()[2].csvFile.name
+        file_name = CSVFile.objects.get(name='out').csvFile.name
 
         df = pd.read_csv('{}'.format(file_name))
 
@@ -84,7 +106,7 @@ class HomeView(TemplateView):
 # FUNCTIONAL DELIVERY
 def get_data(request):
 
-    df = pd.read_csv(CSVFile.objects.all()[0].csvFile)
+    df = pd.read_csv(CSVFile.objects.get(name='out').csvFile)
 
     x = df.orgSize.to_list()
     y = df.Cadence.to_list()
@@ -117,7 +139,7 @@ class ChartData(APIView):
 
     def get(self, request, format=None):
 
-        df = pd.read_csv(CSVFile.objects.all()[2].csvFile).astype('category')
+        df = pd.read_csv(CSVFile.objects.get(name='out').csvFile).astype('category')
 
         xValues = [p + random.uniform(-0.05, 0.05) for p in df.orgSize.cat.codes.to_list()]
         yValues = [i + random.uniform(-0.05, 0.05) for i in df.Cadence.cat.codes.to_list()]
