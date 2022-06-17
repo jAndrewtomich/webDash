@@ -74,20 +74,20 @@ $.ajax({
                 datasets: [{
                     label: 'Patching Cadence',
                     data: defaultData1,
-                    backgroundColor: bg_colors,
-                    //     'rgba(255, 99, 132, 0.7)',
-                    //     'rgba(54, 162, 235, 0.7)',
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)'
                     //     // 'rgba(128, 15, 38, 0.7)',
                     //     // 'rgba(75, 238, 185, 0.7)',
                     //     // 'rgba(210, 25, 67, 0.7)'
-                    // ],
-                    borderColor: brdr_colors,
-                    //     'rgba(255, 99, 132, 1)',
-                    //     'rgba(54, 162, 235, 1)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)'
                     //     // 'rgba(128, 15, 38, 0.7)',
                     //     // 'rgba(75, 238, 185, 0.7)',
                     //     // 'rgba(210, 25, 67, 0.7)'
-                    // ],
+                    ],
                     borderWidth: 1
                 }]
             },
@@ -109,8 +109,10 @@ $.ajax({
                         display: true,
                         position: 'right',
                         labels: {
-                            color: bg_colors,
-                        }
+                            color: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)'
+                        ]}
                     }
                 },
                 elements: {
