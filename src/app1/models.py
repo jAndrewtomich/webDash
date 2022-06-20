@@ -1,6 +1,5 @@
 # from tkinter import CASCADE
 from django.db import models
-from django.contrib import admin
 
 
 class CSVFile(models.Model):

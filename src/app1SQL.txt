@@ -7,3 +7,55 @@ INSERT INTO "new__app1_csvfile" ("id", "name", "csvFile") SELECT "id", "name", "
 DROP TABLE "app1_csvfile";
 ALTER TABLE "new__app1_csvfile" RENAME TO "app1_csvfile";
 COMMIT;
+BEGIN;
+--
+-- Create model Participant
+--
+CREATE TABLE "app1_participant" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(10) NOT NULL, "role" varchar(50) NOT NULL, "industry" varchar(50) NOT NULL, "orgSize" integer NOT NULL);
+--
+-- Create model Tag
+--
+CREATE TABLE "app1_tag" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(50) NOT NULL, "group" varchar(50) NOT NULL);
+--
+-- Create model Evidence
+--
+CREATE TABLE "app1_evidence" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "text" varchar(200) NOT NULL, "participant_id" bigint NOT NULL REFERENCES "app1_participant" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "app1_evidence_participant_id_914b7d7e" ON "app1_evidence" ("participant_id");
+COMMIT;
+BEGIN;
+--
+-- Add field tag to evidence
+--
+CREATE TABLE "new__app1_evidence" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "tag_id" bigint NOT NULL REFERENCES "app1_tag" ("id") DEFERRABLE INITIALLY DEFERRED, "text" varchar(200) NOT NULL, "participant_id" bigint NOT NULL REFERENCES "app1_participant" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "new__app1_evidence" ("id", "text", "participant_id", "tag_id") SELECT "id", "text", "participant_id", NULL FROM "app1_evidence";
+DROP TABLE "app1_evidence";
+ALTER TABLE "new__app1_evidence" RENAME TO "app1_evidence";
+CREATE INDEX "app1_evidence_tag_id_e0456742" ON "app1_evidence" ("tag_id");
+CREATE INDEX "app1_evidence_participant_id_914b7d7e" ON "app1_evidence" ("participant_id");
+COMMIT;
+BEGIN;
+--
+-- Remove field tag from evidence
+--
+CREATE TABLE "new__app1_evidence" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "text" varchar(200) NOT NULL, "participant_id" bigint NOT NULL REFERENCES "app1_participant" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "new__app1_evidence" ("id", "text", "participant_id") SELECT "id", "text", "participant_id" FROM "app1_evidence";
+DROP TABLE "app1_evidence";
+ALTER TABLE "new__app1_evidence" RENAME TO "app1_evidence";
+CREATE INDEX "app1_evidence_participant_id_914b7d7e" ON "app1_evidence" ("participant_id");
+--
+-- Add field tags to evidence
+--
+CREATE TABLE "app1_evidence_tags" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "evidence_id" bigint NOT NULL REFERENCES "app1_evidence" ("id") DEFERRABLE INITIALLY DEFERRED, "tag_id" bigint NOT NULL REFERENCES "app1_tag" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE UNIQUE INDEX "app1_evidence_tags_evidence_id_tag_id_4a5d04d0_uniq" ON "app1_evidence_tags" ("evidence_id", "tag_id");
+CREATE INDEX "app1_evidence_tags_evidence_id_99f0f22e" ON "app1_evidence_tags" ("evidence_id");
+CREATE INDEX "app1_evidence_tags_tag_id_bebc212e" ON "app1_evidence_tags" ("tag_id");
+COMMIT;
+BEGIN;
+--
+-- Alter field name on participant
+--
+CREATE TABLE "new__app1_participant" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" integer NOT NULL, "role" varchar(50) NOT NULL, "industry" varchar(50) NOT NULL, "orgSize" integer NOT NULL);
+INSERT INTO "new__app1_participant" ("id", "role", "industry", "orgSize", "name") SELECT "id", "role", "industry", "orgSize", "name" FROM "app1_participant";
+DROP TABLE "app1_participant";
+ALTER TABLE "new__app1_participant" RENAME TO "app1_participant";
+COMMIT;

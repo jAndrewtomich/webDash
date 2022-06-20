@@ -3,60 +3,8 @@
 <script>
 {% block jquery %}
 var endpoint = 'api/chart/data'
-var bg_colors = ['rgba(250, 133, 133, 0.7)',
-                'rgba(250, 162, 133, 0.7)',
-                'rgba(250, 191, 133, 0.7)',
-                // 'rgba(250, 221, 133, 0.7)',
-                'rgba(250, 250, 133, 0.7)',
-                'rgba(221, 250, 133, 0.7)',
-                // 'rgba(191, 250, 133, 0.7)',
-                'rgba(162, 250, 133, 0.7)',
-                // 'rgba(133, 250, 133, 0.7)',
-                'rgba(133, 250, 162, 0.7)',
-                // 'rgba(133, 250, 191, 0.7)',
-                'rgba(133, 250, 221, 0.7)',
-                'rgba(133, 250, 250, 0.7)',
-                // 'rgba(133, 221, 250, 0.7)',
-                'rgba(135, 206, 250, 0.7)',
-                // 'rgba(133, 191, 250, 0.7)',
-                'rgba(133, 162, 250, 0.7)',
-                // 'rgba(133, 133, 250, 0.7)',
-                // 'rgba(162, 133, 250, 0.7)',
-                'rgba(191, 133, 250, 0.7)',
-                'rgba(221, 133, 250, 0.7)',
-                'rgba(250, 133, 250, 0.7)',
-                // 'rgba(250, 133, 221, 0.7)',
-                'rgba(250, 133, 191, 0.7)',
-                'rgba(250, 133, 162, 0.7)'
-]
-
-var brdr_colors = ['rgba(250, 133, 133, 1.0)',
-                'rgba(250, 162, 133, 1.0)',
-                'rgba(250, 191, 133, 1.0)',
-                // 'rgba(250, 221, 133, 1.0)',
-                'rgba(250, 250, 133, 1.0)',
-                'rgba(221, 250, 133, 1.0)',
-                // 'rgba(191, 250, 133, 1.0)',
-                'rgba(162, 250, 133, 1.0)',
-                // 'rgba(133, 250, 133, 1.0)',
-                'rgba(133, 250, 162, 1.0)',
-                // 'rgba(133, 250, 191, 1.0)',
-                'rgba(133, 250, 221, 1.0)',
-                'rgba(133, 250, 250, 1.0)',
-                // 'rgba(133, 221, 250, 1.0)',
-                'rgba(135, 206, 250, 1.0)',
-                // 'rgba(133, 191, 250, 1.0)',
-                'rgba(133, 162, 250, 1.0)',
-                // 'rgba(133, 133, 250, 1.0)',
-                // 'rgba(162, 133, 250, 1.0)',
-                'rgba(191, 133, 250, 1.0)',
-                'rgba(221, 133, 250, 1.0)',
-                'rgba(250, 133, 250, 1.0)',
-                // 'rgba(250, 133, 221, 1.0)',
-                'rgba(250, 133, 191, 1.0)',
-                'rgba(250, 133, 162, 1.0)'
-]
 var defaultData1 = []
+var defaultData2 = []
 var labels1 = []
 
 $.ajax({
@@ -64,30 +12,31 @@ $.ajax({
     url: endpoint,
     success: function(data) {
         labels1 = data.labels;
-        console.log(labels1)
-        defaultData1 = data.coords;
-        const ctx = document.getElementById('myChart1');
-        const myChart = new Chart(ctx, {
+        defaultData1 = data.coords1;
+        defaultData2 = data.coords2;
+        const ctx1 = document.getElementById('myChart1');
+        const ctx2 = document.getElementById('myChart2');
+        const myChart = new Chart(ctx1, {
             type: 'scatter',
             data: {
                 labels: labels1,
                 datasets: [{
-                    label: 'Patching Cadence',
+                    label: labels1,
                     data: defaultData1,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)'
+                    // backgroundColor: [
+                    //     'rgba(255, 99, 132, 0.7)',
+                    //     'rgba(54, 162, 235, 0.7)'
                     //     // 'rgba(128, 15, 38, 0.7)',
                     //     // 'rgba(75, 238, 185, 0.7)',
                     //     // 'rgba(210, 25, 67, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)'
+                    // ],
+                    // borderColor: [
+                    //     'rgba(255, 99, 132, 1)',
+                    //     'rgba(54, 162, 235, 1)'
                     //     // 'rgba(128, 15, 38, 0.7)',
                     //     // 'rgba(75, 238, 185, 0.7)',
                     //     // 'rgba(210, 25, 67, 0.7)'
-                    ],
+                    // ],
                     borderWidth: 1
                 }]
             },
@@ -106,13 +55,68 @@ $.ajax({
                 },
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'right',
-                        labels: {
-                            color: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)'
-                        ]}
+                        display: false,
+                        // position: 'right',
+                        // labels: {
+                        //     color: [
+                        // 'rgba(255, 99, 132, 1)',
+                        // 'rgba(54, 162, 235, 1)'
+                        // ]}
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 6,
+                        hoverRadius: 10,
+                    }
+                }
+            }
+        });
+        const myChart2 = new Chart(ctx2, {
+            type: 'scatter',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: labels1,
+                    data: defaultData2,
+                    // backgroundColor: [
+                    //     'rgba(255, 99, 132, 0.7)',
+                    //     'rgba(54, 162, 235, 0.7)'
+                    //     // 'rgba(128, 15, 38, 0.7)',
+                    //     // 'rgba(75, 238, 185, 0.7)',
+                    //     // 'rgba(210, 25, 67, 0.7)'
+                    // ],
+                    // borderColor: [
+                    //     'rgba(255, 99, 132, 1)',
+                    //     'rgba(54, 162, 235, 1)'
+                    //     // 'rgba(128, 15, 38, 0.7)',
+                    //     // 'rgba(75, 238, 185, 0.7)',
+                    //     // 'rgba(210, 25, 67, 0.7)'
+                    // ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        beginAtZero: true
+                    }, 
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                        // position: 'right',
+                        // labels: {
+                        //     color: [
+                        // 'rgba(255, 99, 132, 1)',
+                        // 'rgba(54, 162, 235, 1)'
+                        // ]}
                     }
                 },
                 elements: {
@@ -141,7 +145,14 @@ $.ajax({
         <div class="col-sm-3 col-md-3 col-lg-3"></div>
     </div>
 
-    <!-- <div class="row" style="text-align: center;">
+    <div class="row">
+        <div class="col-sm-3 col-md-3 col-lg-3"></div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <canvas id="myChart2" height="600"></canvas>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3"></div>
+    </div>
+    <div class="row" style="text-align: center;">
         <h1>Key Task: Patching - Security, Major, Minor, RHIN: 77</h1>
     </div>
 
@@ -158,7 +169,7 @@ $.ajax({
     </div>
 
     {% include 'app1/myCharts/pyscript/myChart2.html' %}
-    {% include 'app1/myCharts/pyscript/myChart3.html' %}
+    <!-- {% include 'app1/myCharts/pyscript/myChart3.html' %}
     {% include 'app1/myCharts/pyscript/myChart4.html' %} -->
 
 {% endblock %}
