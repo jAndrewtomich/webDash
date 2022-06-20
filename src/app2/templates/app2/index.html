@@ -1,0 +1,176 @@
+{% extends 'app1/base.html' %}
+
+<!-- <script>
+{% block jquery %}
+var endpoint = 'api/chart/data'
+var defaultData1 = []
+var defaultData2 = []
+var labels1 = []
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data) {
+        labels1 = data.labels;
+        defaultData1 = data.coords1;
+        defaultData2 = data.coords2;
+        const ctx1 = document.getElementById('myChart1');
+        const ctx2 = document.getElementById('myChart2');
+        const myChart = new Chart(ctx1, {
+            type: 'scatter',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: labels1,
+                    data: defaultData1,
+                    // backgroundColor: [
+                    //     'rgba(255, 99, 132, 0.7)',
+                    //     'rgba(54, 162, 235, 0.7)'
+                    //     // 'rgba(128, 15, 38, 0.7)',
+                    //     // 'rgba(75, 238, 185, 0.7)',
+                    //     // 'rgba(210, 25, 67, 0.7)'
+                    // ],
+                    // borderColor: [
+                    //     'rgba(255, 99, 132, 1)',
+                    //     'rgba(54, 162, 235, 1)'
+                    //     // 'rgba(128, 15, 38, 0.7)',
+                    //     // 'rgba(75, 238, 185, 0.7)',
+                    //     // 'rgba(210, 25, 67, 0.7)'
+                    // ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                // scales: {
+                //     y: {
+                //         beginAtZero: true
+                //     }
+                // }
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    } 
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                        // position: 'right',
+                        // labels: {
+                        //     color: [
+                        // 'rgba(255, 99, 132, 1)',
+                        // 'rgba(54, 162, 235, 1)'
+                        // ]}
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 6,
+                        hoverRadius: 10,
+                    }
+                }
+            }
+        });
+        const myChart2 = new Chart(ctx2, {
+            type: 'scatter',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: labels1,
+                    data: defaultData2,
+                    // backgroundColor: [
+                    //     'rgba(255, 99, 132, 0.7)',
+                    //     'rgba(54, 162, 235, 0.7)'
+                    //     // 'rgba(128, 15, 38, 0.7)',
+                    //     // 'rgba(75, 238, 185, 0.7)',
+                    //     // 'rgba(210, 25, 67, 0.7)'
+                    // ],
+                    // borderColor: [
+                    //     'rgba(255, 99, 132, 1)',
+                    //     'rgba(54, 162, 235, 1)'
+                    //     // 'rgba(128, 15, 38, 0.7)',
+                    //     // 'rgba(75, 238, 185, 0.7)',
+                    //     // 'rgba(210, 25, 67, 0.7)'
+                    // ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        beginAtZero: true
+                    }, 
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                        // position: 'right',
+                        // labels: {
+                        //     color: [
+                        // 'rgba(255, 99, 132, 1)',
+                        // 'rgba(54, 162, 235, 1)'
+                        // ]}
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 6,
+                        hoverRadius: 10,
+                    }
+                }
+            }
+        });
+    },
+    error: function(error_data) {
+        console.log(error_data)
+    }
+})
+{% endblock %}
+</script> -->
+
+{% block content %}
+
+    <!-- <div class="row">
+        <div class="col-sm-3 col-md-3 col-lg-3"></div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <canvas id="myChart1" height="600"></canvas>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3"></div>
+    </div> -->
+
+    <!-- <div class="row">
+        <div class="col-sm-3 col-md-3 col-lg-3"></div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <canvas id="myChart2" height="600"></canvas>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3"></div>
+    </div> -->
+    <div class="row" style="text-align: center;">
+        <h1>Key Task: Patching - Security, Major, Minor, RHIN: 77</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <div id="myChart2"></div>
+        </div>
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <div id="myChart3"></div>
+        </div>
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <div id="myChart4"></div>
+        </div>
+    </div>
+
+    {% include 'app1/myCharts/pyscript/myChart2.html' %}
+    <!-- {% include 'app1/myCharts/pyscript/myChart3.html' %}
+    {% include 'app1/myCharts/pyscript/myChart4.html' %} -->
+
+{% endblock %}
+

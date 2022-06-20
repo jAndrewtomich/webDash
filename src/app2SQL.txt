@@ -1,0 +1,23 @@
+BEGIN;
+--
+-- Create model CSVFile
+--
+CREATE TABLE "app2_csvfile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(100) NOT NULL, "csvFile" varchar(100) NOT NULL);
+--
+-- Create model Participant
+--
+CREATE TABLE "app2_participant" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(10) NOT NULL, "role" varchar(50) NOT NULL, "industry" varchar(50) NOT NULL, "orgSize" integer NOT NULL);
+--
+-- Create model Tag
+--
+CREATE TABLE "app2_tag" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(50) NOT NULL, "group" varchar(50) NOT NULL);
+--
+-- Create model Evidence
+--
+CREATE TABLE "app2_evidence" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "text" varchar(200) NOT NULL, "participant_id" bigint NOT NULL REFERENCES "app2_participant" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE TABLE "app2_evidence_tags" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "evidence_id" bigint NOT NULL REFERENCES "app2_evidence" ("id") DEFERRABLE INITIALLY DEFERRED, "tag_id" bigint NOT NULL REFERENCES "app2_tag" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "app2_evidence_participant_id_afa1b480" ON "app2_evidence" ("participant_id");
+CREATE UNIQUE INDEX "app2_evidence_tags_evidence_id_tag_id_a9dda20e_uniq" ON "app2_evidence_tags" ("evidence_id", "tag_id");
+CREATE INDEX "app2_evidence_tags_evidence_id_3fc3852d" ON "app2_evidence_tags" ("evidence_id");
+CREATE INDEX "app2_evidence_tags_tag_id_8e0347e1" ON "app2_evidence_tags" ("tag_id");
+COMMIT;
