@@ -1,5 +1,5 @@
 from jinja2 import Environment
-# from django.contrib.staticfiles.storage import staticfiles_storage
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -69,14 +69,14 @@ import re, random
 ####################################
 
 
-# def environment(**options):
-#     env = Environment(**options)
-#     env.globals.update({
-#         'static': staticfiles_storage.url,
-#         'url': reverse,
-#     })
+def environment(**options):
+    env = Environment(**options)
+    env.globals.update({
+        'static': staticfiles_storage.url,
+        'url': reverse,
+    })
 
-#     return env
+    return env
 
 
 
@@ -121,7 +121,7 @@ class HomeView(TemplateView):
 
         # del ogdf, orgdf
 
-        return render(request, 'app1/index.html', {'data': {
+        return render(request, 'app2/index.html', {'data': {
             'columns': {
                 x: df[x].to_list() for x in df.columns
             },
@@ -135,26 +135,26 @@ class HomeView(TemplateView):
 
 
 # FUNCTIONAL DELIVERY
-def get_data(request):
+# def get_data(request):
 
-    df = pd.read_csv(CSVFile.objects.get(name='out').csvFile)
+#     df = pd.read_csv(CSVFile.objects.get(name='out').csvFile)
 
-    x = df.orgSize.to_list()
-    y = df.Cadence.to_list()
-    # z = df.Participant.to_list()
+#     x = df.orgSize.to_list()
+#     y = df.Cadence.to_list()
+#     # z = df.Participant.to_list()
 
-    data = {
-        'coords': [
-            {'x': a,
-             'y': b,
-                # 'z': c,
-            }
-                for (a, b) in zip(x, y)
-        ]
+#     data = {
+#         'coords': [
+#             {'x': a,
+#              'y': b,
+#                 # 'z': c,
+#             }
+#                 for (a, b) in zip(x, y)
+#         ]
 
-    }
+#     }
 
-    return JsonResponse(data)
+#     return JsonResponse(data)
 
 
 
@@ -163,37 +163,37 @@ def get_data(request):
 
 
 # DJANGO REST DELIVERY
-class ChartData(APIView):
-    authentication_classes = []
-    permission_classes = []
+# class ChartData(APIView):
+#     authentication_classes = []
+#     permission_classes = []
 
 
-    def get(self, request, format=None):
+#     def get(self, request, format=None):
 
-        df = pd.read_csv(CSVFile.objects.get(name='out2').csvFile).astype('category')
+#         df = pd.read_csv(CSVFile.objects.get(name='out2').csvFile).astype('category')
 
-        xValues1 = [p + random.uniform(-0.05, 0.05) for p in df.modOrgSize.cat.codes.to_list()]
-        yValues1 = [i + random.uniform(-0.05, 0.05) for i in df.Participant.cat.codes.to_list()]
+#         xValues1 = [p + random.uniform(-0.05, 0.05) for p in df.modOrgSize.cat.codes.to_list()]
+#         yValues1 = [i + random.uniform(-0.05, 0.05) for i in df.Participant.cat.codes.to_list()]
 
-        xValues2 = [f for f in df.Freq.cat.codes.to_list()]
-        yValues2 = [p for p in df.Participant.cat.codes.to_list()]
+#         xValues2 = [f for f in df.Freq.cat.codes.to_list()]
+#         yValues2 = [p for p in df.Participant.cat.codes.to_list()]
 
 
-        labels = df.Cadence.cat.categories.to_list()
+#         labels = df.Cadence.cat.categories.to_list()
 
-        data = {
-            'coords1': [
-                {'x': x,
-                 'y': y
-                } for x, y in zip(xValues1, yValues1)
-            ],
-            'coords2': [
-                {'x': x,
-                 'y': y,
-                } for x, y in zip(xValues2, yValues2)
-            ],
-            'labels': labels
-        }
+#         data = {
+#             'coords1': [
+#                 {'x': x,
+#                  'y': y
+#                 } for x, y in zip(xValues1, yValues1)
+#             ],
+#             'coords2': [
+#                 {'x': x,
+#                  'y': y,
+#                 } for x, y in zip(xValues2, yValues2)
+#             ],
+#             'labels': labels
+#         }
 
-        del df, xValues1, xValues2, yValues1, yValues2, labels
-        return Response(data)
+#         del df, xValues1, xValues2, yValues1, yValues2, labels
+#         return Response(data)

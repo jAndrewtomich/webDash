@@ -5,13 +5,12 @@ import pandas as pd
 import seaborn as sns
 import random
 
-df = pd.DataFrame({{ data.columns }}).drop('Unnamed: 0', axis=1).astype('category')
+df = pd.DataFrame({{ data.columns }}).loc[:, ['Freq', 'Participant', 'Cadence']].astype('category')
 
 <!-- orgDict = {{ data.orgDict }}
 parDict = {{ data.parDict }} -->
 
-print(df.columns, orgDict, parDict)
-<!-- fig1, ax = plt.subplots(1, 1, figsize=(8, 8), layout='constrained')
+fig1, ax = plt.subplots(1, 1, figsize=(8, 8), layout='constrained')
 
 sns.stripplot(data=df,
               x='Freq',
@@ -30,12 +29,12 @@ ax.set_xticks(ticks=np.arange(df.Freq.cat.categories.size),
             fontsize=15,
             rotation=50)
 
-ax.set_yticks(ticks=[int(y) + 1 for y in ax.get_xticks()],
-            labels=[parDict[p] for p in df.Participant.cat.categories],
-            fontsize=15)
+plt.setp(ax.get_yticklabels(), fontsize=15)
 
 ax.set_xlabel('patching frequency'.upper(), fontsize=15)
 ax.set_ylabel('participant'.upper(), fontsize=15)
 
-fig1 -->
+del df
+
+fig1
 </py-script>

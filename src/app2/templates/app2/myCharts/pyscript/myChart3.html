@@ -5,34 +5,36 @@ import pandas as pd
 import seaborn as sns
 import random
 
-df = pd.DataFrame({{ data.columns }}).astype('category')
+df = pd.DataFrame({{ data.columns }}).loc[:, ['modOrgSize', 'Participant', 'Cadence']].astype('category')
 
-orgDict = {{ data.orgDict }}
-parDict = {{ data.parDict }}
+<!-- orgDict = {{ data.orgDict }}
+parDict = {{ data.parDict }} -->
 
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 8), layout='constrained')
 
-sns.scatterplot(x=[x + random.uniform(-0.15, 0.15) for x in df.Cadence.cat.codes],
-        y=[y + random.uniform(-0.15, 0.15) for y in df.orgSize.cat.codes],
-        hue=[parDict[c] for c in df.Participant],
-        alpha=0.7,
-        s=300,
-        ax=ax)
+sns.stripplot(data=df,
+              x='modOrgSize',
+              y='Participant',
+              hue='Cadence',
+              s=15,
+              jitter=False,
+              dodge=False,
+              ax=ax
+              )
 
 sns.move_legend(ax, 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
 
-ax.set_xticks(ticks=np.arange(df.Cadence.cat.categories.size),
-        labels=[c[18:] for c in df.Cadence.cat.categories],
-        fontsize=15,
-        rotation=50)
+ax.set_xticklabels(ax.get_xticklabels(), fontsize=15)
 
-ax.set_yticks(ticks=np.arange(df.orgSize.cat.categories.size),
-        labels=[orgDict[o] for o in df.orgSize.cat.categories],
+ax.set_yticks(ticks=[int(y) + 1 for y in ax.get_yticks()],
+        labels=ax.get_yticklabels(),
         fontsize=15)
 
-ax.set_xlabel('Patching Cadence', fontsize=15)
-ax.set_ylabel('Org Size', fontsize=15)
+ax.set_xlabel('modified org size'.upper(), fontsize=15)
+ax.set_ylabel('participant'.upper(), fontsize=15)
+
+del df
 
 fig
 </py-script>
