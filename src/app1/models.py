@@ -1,14 +1,14 @@
 # from tkinter import CASCADE
 from django.db import models
 
-
+################## NEED TO REMOVE THIS CLASS ###########################
 class CSVFile(models.Model):
     name = models.CharField(max_length=100)
     csvFile = models.FileField(upload_to='app1/csvs')
 
     def __str__(self):
         return self.name
-
+#########################################################################
 
 class Participant(models.Model):
     name = models.CharField(max_length=10)
