@@ -1,77 +1,308 @@
 <py-script output="myChart5">
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import random
 
-df = pd.DataFrame({{ data.columns }}).astype('category')
+tmp = pd.DataFrame({{ data.columns }}).loc[:, ['modOrgSize', 'orgSize', 'Freq', 'Cadence', 'Industry', 'Participant']].astype('category')
 
 sns.set_style('darkgrid')
 
-fig, ax = plt.subplots(3, 1, figsize=(16, 12), layout='constrained')
-
-sns.stripplot(data=df,
-              x='Freq',
-              y='Participant',
-              hue='Cadence',
-              s=15,
-              jitter=False,
-              dodge=False,
-              ax=ax[0]
-              )
-
-sns.move_legend(ax[0], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
-
-ax[0].set_xticks(ticks=np.arange(df.Freq.cat.categories.size),
-                 labels=[l[:7] for l in df.Freq.cat.categories]
-                 )
-
-ax[0].set_yticks(ticks=[i for i in range(1, 19)])
-
-ax[0].set_xlabel('patching frequency'.upper(), fontsize=15)
-ax[0].set_ylabel('participant'.upper(), fontsize=15)
-
-sns.stripplot(data=df,
-              x='modOrgSize',
-              y='Participant',
-              hue='Cadence',
-              s=15,
-              jitter=False,
-              dodge=False,
-              ax=ax[1]
-              )
-
-sns.move_legend(ax[1], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
+fig, ax = plt.subplots(5, 1, figsize=(8, 10), layout='constrained')
 
 
-ax[1].set_yticks(ticks=[i for i in range(1, 19)])
+sns.stripplot(data=tmp,
+                x='modOrgSize',
+                y='Participant',
+#               hue='Participant',
+#               palette=sns.color_palette(),
+#               palette='seismic_r',
+                s=12,
+                alpha=0.7,
+                jitter=False,
+                dodge=False,
+                ax=ax[0],
+                marker='',
+                edgecolor=None
+                )
 
-ax[1].set_xlabel('modified org size'.upper(), fontsize=15)
-ax[1].set_ylabel('participant'.upper(), fontsize=15)
+# sns.move_legend(ax[0], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
 
-sns.stripplot(data=df,
-              x='Industry',
-              y='Participant',
-              hue='Cadence',
-              s=15,
-              jitter=False,
-              dodge=False,
-              ax=ax[2]
-              )
 
-sns.move_legend(ax[2], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
+# handles, labels = ax[0].get_legend_handles_labels()
 
-<!-- plt.setp(ax[2].get_xticklabels(), rotation=70) -->
+# legend = ax[0].get_legend().get_legend_handler_map()
+# plt.setp(ax[0].get_legend(), visible=False)
+# ax[0].text(0, 12, '12', fontsize=12)
 
-ax[2].set_yticks(ticks=[i for i in range(1, 19)])
+# ax[3] = sns.FacetGrid.add_legend(legend, label_order=tmp.Participant.cat.categories)
 
-ax[2].set_xlabel('industry'.upper(), fontsize=15)
-ax[2].set_ylabel('participant'.upper(), fontsize=15)
 
-del df
+ax[0].set_title('key task: patching'.upper(),
+                fontsize=20
+                )
 
-<!-- plt.savefig('output/stripplot.svg', format='svg', facecolor='white', edgecolor='white') -->
+ax[0].set_xticks(ticks=np.arange(tmp.modOrgSize.cat.categories.size),
+                    labels=tmp.modOrgSize.cat.categories,
+                    fontsize=12
+                    )
+
+# plt.setp(ax[0].get_xticklabels(), visible=False)
+
+ax[0].set_yticks(ticks=[i for i in range(1, 19)],
+                    labels=[]
+                )
+
+# ax[0].set_xlabel('patching frequency'.upper(), fontsize=15)
+ax[0].set_ylabel('mod size'.upper(),
+                    fontsize=16,
+#                  rotation=0,
+#                  loc='top',
+                    labelpad=0.03
+                )
+
+ax[0].set(xlabel='',
+#           ylabel='',
+#           title=''
+            )
+
+
+sns.stripplot(data=tmp,
+                x='orgSize',
+                y='Participant',
+#               hue='Participant',
+#               palette='seismic_r',
+                s=12,
+                alpha=0.7,
+                jitter=False,
+                dodge=False,
+                ax=ax[1],
+                marker='',
+                edgecolor=None
+                )
+
+# sns.move_legend(ax[1], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
+# plt.setp(ax[1].get_legend(), visible=False)
+
+# ax[1].set_title('modified org size'.upper(),
+#                 fontsize=27
+#                )
+
+ax[1].set_xticks(ticks=np.arange(tmp.orgSize.cat.categories.size),
+                    labels=tmp.orgSize.cat.categories,
+                    fontsize=12
+                    )
+
+# plt.setp(ax[1].get_xticklabels(), visible=False)
+
+ax[1].set_yticks(ticks=[i for i in range(1, 19)],
+                    labels=[]
+                )
+
+# ax[1].set_xlabel('patching frequency'.upper(), fontsize=15)
+ax[1].set_ylabel('org size'.upper(),
+                    fontsize=16,
+#                  rotation=90,
+#                  loc='top',
+                    labelpad=0.03
+                )
+
+ax[1].set(xlabel='',
+#           ylabel='',
+            title=''
+            )
+
+sns.stripplot(data=tmp,
+                x='Freq',
+                y='Participant',
+#               hue='Participant',
+#               palette='seismic_r',
+                s=12,
+                alpha=0.7,
+                jitter=False,
+                dodge=False,
+                ax=ax[2],
+                marker='',
+                edgecolor=None
+                )
+
+# sns.move_legend(ax[2], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
+# plt.setp(ax[2].get_legend(), visible=False)
+
+# ax[2].set_title('modified org size'.upper(),
+#                 fontsize=27
+#                )
+
+ax[2].set_xticks(ticks=np.arange(tmp.Freq.cat.categories.size),
+                    labels=[f[:7] for f in tmp.Freq.cat.categories],
+                    fontsize=12
+                    )
+
+# plt.setp(ax[2].get_xticklabels(), visible=False)
+
+ax[2].set_yticks(ticks=[i for i in range(1, 19)],
+                    labels=[]
+                )
+
+# ax[2].set_xlabel('patching frequency'.upper(), fontsize=15)
+ax[2].set_ylabel('freq'.upper(),
+                    fontsize=16,
+#                  rotation=90,
+#                  loc='top',
+                    labelpad=0.03
+                )
+
+ax[2].set(title='',
+            xlabel='',
+#           ylabel=''
+            )
+
+sns.stripplot(data=tmp,
+                x='Cadence',
+                y='Participant',
+#               hue='Participant',
+#               palette='seismic_r',
+                s=12,
+                alpha=0.8,
+                jitter=False,
+                dodge=False,
+                ax=ax[3],
+                marker='',
+                edgecolor=None
+                )
+
+# sns.move_legend(ax[3], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
+
+# ax[3].set_title('modified org size'.upper(),
+#                 fontsize=27
+#                )
+
+# plt.setp(ax[3].get_legend(), visible=False)
+
+ax[3].set_xticks(ticks=np.arange(tmp.Cadence.cat.categories.size),
+                    labels=tmp.Cadence.cat.categories,
+                    fontsize=12
+                    )
+
+# plt.setp(ax[3].get_xticklabels(), visible=False)
+
+ax[3].set_yticks(ticks=[i for i in range(1, 19)],
+                    labels=[]
+                )
+
+# ax[3].set_xlabel('patching frequency'.upper(), fontsize=15)
+ax[3].set_ylabel('cadence'.upper(),
+                    fontsize=16,
+#                  rotation=90,
+#                  loc='center',
+                    labelpad=0.03
+                )
+
+ax[3].set(title='',
+            xlabel='',
+#           ylabel=''
+            )
+
+sns.stripplot(data=tmp,
+                x='Industry',
+                y='Participant',
+#               hue='Participant',
+#               palette='seismic_r',
+                s=12,
+                alpha=0.7,
+                jitter=False,
+                dodge=False,
+                ax=ax[4],
+                marker='',
+                edgecolor=None
+                )
+
+# sns.move_legend(ax[2], 'upper left', bbox_to_anchor=(1, 1), fontsize=12, markerscale=2.0)
+# plt.setp(ax[2].get_legend(), visible=False)
+
+# ax[2].set_title('modified org size'.upper(),
+#                 fontsize=27
+#                )
+
+ax[4].set_xticks(ticks=np.arange(tmp.Industry.cat.categories.size),
+                    labels=[f[:7] for f in tmp.Industry.cat.categories],
+                    fontsize=12
+                    )
+
+# plt.setp(ax[2].get_xticklabels(), visible=False)
+
+ax[4].set_yticks(ticks=[i for i in range(1, 19)],
+                    labels=[]
+                )
+
+# ax[2].set_xlabel('patching frequency'.upper(), fontsize=15)
+ax[4].set_ylabel('industry'.upper(),
+                    fontsize=16,
+                    rotation=90,
+                    loc='top',
+                    labelpad=0.03
+                )
+
+ax[4].set(title='',
+            xlabel='',
+#           ylabel=''
+            )
+
+# for h in handles:
+#     h.set_alpha(0.7)
+#     print(h.properties())
+#     print(h.properties()['label'])
+#     break
+#     h.set_marker(h.get_label())
+
+# print(ax[0].get_legend_handles_labels())
+# for x, y in zip(ax[0].get_xticks(), ax[0].get_yticks()):
+    
+#     label = f"{y}"
+    
+#     ax[0].annotate(label,
+#                    (x, y)
+#                   )
+
+# print(ax[0].properties()['children'])
+colors = sns.color_palette('hls', 19)
+for i in range(5):
+    for c in ax[i].properties()['children']:
+        if isinstance(c, matplotlib.collections.PathCollection):     
+            for d in c.properties()['offsets']:
+                try:
+                    ax[i].annotate(str(int(d[1])),
+                                    (d[0], d[1]),
+                                    xytext=(d[0] - 0.05, d[1] - 0.55),
+                                    fontsize=10,
+                                    color=colors[int(d[1])]
+                                    )
+                except (IndexError, KeyError) as e:
+                    print('masked error')
+                    print(e, d, type(d))
+                    print(d[0], d[1])
+    #                 print(c.properties())
+                    continue
+
+
+# fig.legend(handles,
+#            labels,
+#            'upper right',
+#            markerscale=0.8,
+#            fontsize=2,
+#            columnspacing=0.1
+#           )
+
+# sns.move_legend(fig,
+#                 'upper left',
+#                 bbox_to_anchor=(1,1),
+#                 prop={'size': 5},
+#                 markerscale=0.3,
+#                 )
+
 
 fig
+# plt.show();
 </py-script>
